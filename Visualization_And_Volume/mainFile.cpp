@@ -502,9 +502,9 @@ void main(int argc, char** argv) {
 	theCamera.setCameraaXaYaZ(lx, ly, lz);
 
 	// Starting up the player and sound as well as playing it
-	myPlayer.Start();
-	loadSound();
-	playSound();
+	// myPlayer.Start();
+	// loadSound();
+	// playSound();
 
 	// enter GLUT event processing cycle
 	glutMainLoop();
