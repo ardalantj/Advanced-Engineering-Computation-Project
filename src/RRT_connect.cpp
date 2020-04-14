@@ -318,6 +318,8 @@ std::vector<std::vector<double>> RRT_connect::search(int sampleSize, double inte
 
       localPlanner_extend(randC, nearestQ); // transition validity check
 
+      if(m_newChild_a == nullptr) continue; // if no extension found
+
       change = false; // flip switch
 
       double* nearestQ_b = nearestNeighbor(m_newChild_a);
@@ -335,6 +337,8 @@ std::vector<std::vector<double>> RRT_connect::search(int sampleSize, double inte
       double* nearestQ = nearestNeighbor(randC); // this is an address of vertex point in heap/tree closest to random point
 
       localPlanner_extend(randC, nearestQ); // transition validity check
+
+      if(m_newChild_b == nullptr) continue; // if no extension found
 
       change = true;
 
