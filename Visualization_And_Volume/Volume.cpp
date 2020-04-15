@@ -1,32 +1,34 @@
 #include "Volume.h"
 
-void Volume::DrawSphere(double offX, double offY, double offZ, double r, int lats, int longs, float red, float green, float blue)
+vector<vector<vector<int>>> Volume::GetVolumeStates()
 {
 
-	int i, j;
-	for (i = 0; i <= lats; i++) {
-		double lat0 = PI * (-0.5 + (double)(i - 1) / lats);
-		double z0 = sin(lat0);
-		double zr0 = cos(lat0);
+	vector<vector<vector<int>>> volStates;
 
-		double lat1 = PI * (-0.5 + (double)i / lats);
-		double z1 = sin(lat1);
-		double zr1 = cos(lat1);
+	for (int i = 0; i < length; i++)
+	{
+		vector<vector<int>> yzVect;
+		for (int j = 0; j < height; j++)
+		{
 
-		glBegin(GL_QUAD_STRIP);
-		glColor3f(red, green, blue);
-		for (j = 0; j <= longs; j++) {
-			double lng = 2 * PI * (double)(j - 1) / longs;
-			double x = cos(lng);
-			double y = sin(lng);
-			auto a = { x * zr0, y * zr0, z0 };
-			glNormal3f(x * zr0, y * zr0, z0);
-			glVertex3f(offX + r * x * zr0, offY + r * y * zr0, offZ + r * z0);
-			glNormal3f(x * zr1, y * zr1, z1);
-			glVertex3f(offX + r * x * zr1, offY + r * y * zr1, offZ + r * z1);
+			vector<int> zVect;
+			for (int k = 0; k < width; k++)
+			{
+
+				zVect.push_back(vol[i][j][k].blocked);
+
+			}
+
+			yzVect.push_back(zVect);
+
 		}
-		glEnd();
+
+		volStates.push_back(yzVect);
+
 	}
+
+	return volStates;
+
 }
 
 Volume::Volume()
@@ -92,15 +94,24 @@ void Volume::OffsetPath()
 void Volume::DrawPath()
 {
 	auto startNode = bestPath.centerXYZ[0];
-	DrawSphere(startNode[0], startNode[1], startNode[2], .25, 20, 20, 0., 0., 1.);
+	float rgbaStart[4] = { 0.,0.,255.,255. };
+	float shininessStart = 60.;
+	SetMaterial(rgbaStart, shininessStart);
+	DrawSphere(startNode[0], startNode[1], startNode[2], .25, 20, 20);
 
 	auto endNode = bestPath.centerXYZ[bestPath.centerXYZ.size()-1];
-	DrawSphere(endNode[0], endNode[1], endNode[2], .25, 20, 20, 0., 1., 0.);
+	float rgbaEnd[4] = { 0.,255.,0.,255. };
+	float shininessEnd = 60.;
+	SetMaterial(rgbaEnd, shininessEnd);
+	DrawSphere(endNode[0], endNode[1], endNode[2], .25, 20, 20);
 
+	float rgbaMid[4] = { 255.,0.,0.,255. };
+	float shininessMid = 60.;
+	SetMaterial(rgbaMid, shininessMid);
 	for (int i = 1; i < bestPath.centerXYZ.size()-1; i++)
 	{
 		auto oneNode = bestPath.centerXYZ[i];
-		DrawSphere(oneNode[0], oneNode[1], oneNode[2], .25, 20, 20, 1., 0., 0.);
+		DrawSphere(oneNode[0], oneNode[1], oneNode[2], .25, 20, 20);
 	}
 	
 }

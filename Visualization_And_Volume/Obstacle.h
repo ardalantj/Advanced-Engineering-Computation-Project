@@ -2,6 +2,8 @@
 
 #include <GL/glut.h>
 
+#include "Drawing_jwoodfor.h"
+
 class Obstacle
 {
 
