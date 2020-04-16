@@ -365,9 +365,9 @@ void renderScene()
 
 	scene.RunScene(theCamera);
 
-	//// Get the current passed time from glut
-	//// Used for limiting fps to 60 as demo is tied to fps and not time for movement
-	//passedTime = glutGet(GLUT_ELAPSED_TIME);
+	// Get the current passed time from glut
+	// Used for limiting fps to 60 as demo is tied to fps and not time for movement
+	passedTime = glutGet(GLUT_ELAPSED_TIME);
 
 	//// Displaying the first scene, scene runs for 56 seconds
 	//if (passedTime < 56000)
@@ -469,20 +469,20 @@ void main(int argc, char** argv) {
 	glCullFace(GL_BACK);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
-	//glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
 
 	//glOrtho(-250, 250, -250, 250, -250, 250);
 
 	// Setting up Lighting
-	//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-	//glEnable(GL_LIGHTING);
-	//glEnable(GL_LIGHT0);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 
-	//GLfloat qaAmbientLight[] = { 0.2,0.2,0.2,1.0 };
-	//GLfloat qaDiffuseLight[] = { 0.8,0.8,0.8,1.0 };
-	//GLfloat qaSpecularLight[] = { 1.,1.,1.,1. };
-	//glLightfv(GL_LIGHT0, GL_AMBIENT, qaAmbientLight);
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, qaDiffuseLight);
+	GLfloat qaAmbientLight[] = { 0.2,0.2,0.2,1.0 };
+	GLfloat qaDiffuseLight[] = { 0.8,0.8,0.8,1.0 };
+	GLfloat qaSpecularLight[] = { 1.,1.,1.,1. };
+	glLightfv(GL_LIGHT0, GL_AMBIENT, qaAmbientLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, qaDiffuseLight);
 	//glLightfv(GL_LIGHT0, GL_SPECULAR, qaSpecularLight);
 
 	theCamera.setCameraXYZ(int(length/2), int(height*2), int(width/2));
@@ -492,19 +492,19 @@ void main(int argc, char** argv) {
 		theCamera.getCameraaX() + theCamera.getCameraX(), theCamera.getCameraaY() + theCamera.getCameraY(), theCamera.getCameraaZ() + theCamera.getCameraZ(),
 		0.0f, 1.0f, 0.0f);
 
-	//GLfloat qaLightPosition[] = {100.,100.,100.,1.0};
-	//GLfloat qaLightDirection[] = { 0.,1.,0 };
-	//glLightfv(GL_LIGHT0, GL_POSITION, qaLightPosition);
-	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, qaLightDirection);
+	GLfloat qaLightPosition[] = {100.,100.,100.,1.0};
+	GLfloat qaLightDirection[] = { 0.,1.,0 };
+	glLightfv(GL_LIGHT0, GL_POSITION, qaLightPosition);
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, qaLightDirection);
 
 
 	theCamera.setCameraXYZ(x, y, z);
 	theCamera.setCameraaXaYaZ(lx, ly, lz);
 
 	// Starting up the player and sound as well as playing it
-	// myPlayer.Start();
-	// loadSound();
-	// playSound();
+	//myPlayer.Start();
+	//loadSound();
+	//playSound();
 
 	// enter GLUT event processing cycle
 	glutMainLoop();

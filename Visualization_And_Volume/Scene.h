@@ -11,6 +11,10 @@
 #include "Volume.h"
 #include "Obstacle.h"
 
+#include "Drawing_jwoodfor.h"
+
+#include "RRT_connect.h"
+
 
 using namespace std;
 
@@ -24,13 +28,13 @@ private:
 	float backBoxLength = 200.;
 	float backBoxAnchor[3] = { 0., 0., 0.};
 	int backBoxAlpha = 255;
-	int backBoxColor3ub[3] = { 100, 100, 100 };
+	int backBoxColor3ub[3] = { 200, 200, 200 };
 
 	Volume volume;
 
 	Obstacle obstacles[3];
 
-
+	long countTime = 0;
 
 public:
 
@@ -57,23 +61,6 @@ public:
 	Scene(float oneLength, float oneWidth, float oneHeight);
 
 	void RunScene(Camera theCamera);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 };
 

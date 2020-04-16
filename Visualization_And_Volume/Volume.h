@@ -3,6 +3,8 @@
 #include <vector>
 #include <GL/glut.h>
 
+#include "Drawing_jwoodfor.h"
+
 using namespace std;
 
 class Volume
@@ -30,8 +32,6 @@ class Volume
 		vector<float> pathEnd = { 0,0,0 };
 	};
 
-
-
 private:
 
 	float height = 0.;
@@ -41,11 +41,6 @@ private:
 
 	vector<vector<vector<volCube>>> vol;
 	path bestPath;
-
-	void DrawSphere(double offX, double offY, double offZ, double r, int lats, int longs, float red, float green, float blue);
-
-
-
 
 
 
@@ -67,6 +62,10 @@ public:
 
 	void SetPath(path onePath) { bestPath = onePath; }
 	path* GetPath() { return &bestPath; }
+
+	vector<vector<vector<volCube>>> GetVolume() { return vol; }
+
+	vector<vector<vector<int>>> GetVolumeStates();
 
 	Volume();
 
