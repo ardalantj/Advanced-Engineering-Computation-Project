@@ -18,9 +18,31 @@ void RRT_connect::reset(){
 
 }
 
-RRT_connect::RRT_connect(double* start, double* goal, int*** map, int X, int Y, int Z): m_start(start), m_goal(goal),
-m_map(map), m_newChild_a(nullptr), m_newChild_b(nullptr), X(X), Y(Y), Z(Z)
+RRT_connect::RRT_connect(const std::vector<double> &s, const std::vector<double> &g, const std::vector<std::vector<std::vector<int>>> &map, int X, int Y, int Z):
+m_newChild_a(nullptr), m_newChild_b(nullptr), X(X), Y(Y), Z(Z)
 {
+
+  // allocate  start and end
+  m_start = new double[3];
+  *m_start = s[0];
+  *(m_start+1) = s[1];
+  *(m_start+2) = s[2];
+  m_goal = new double[3];
+  *m_goal = g[0];
+  *(m_goal+1) = g[1];
+  *(m_goal+2) = g[2];
+
+  // allocate map
+  m_map = new int**[X];
+  for(int i =0; i<X; i++){
+     m_map[i] = new int*[Y];
+     for(int j =0; j<Y; j++){
+         m_map[i][j] = new int[Z];
+         for(int k = 0; k<Z;k++){
+            m_map[i][j][k] = map[i][j][k];
+         }
+     }
+  }
 
   tree_a.insert(std::make_pair(m_start, nullptr));
   tree_length_a.insert(std::make_pair(m_start, 0));
@@ -374,4 +396,17 @@ RRT_connect::~RRT_connect(){
     if(it_b->first == m_goal) continue;
     else{ delete it_b->first;}
   }
+
+  delete[] m_start;
+  delete[] m_goal;
+
+  for(int i = 0; i <X; ++i)    {
+    for(int j = 0; j < Y; ++j)
+    {
+        delete[] m_map[i][j];
+    }
+    delete[] m_map[i];
+  }
+
+    delete[] m_map;
 }

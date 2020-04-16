@@ -27,7 +27,7 @@
 
 class RRT_connect{
 	public:
-		RRT_connect(double* start, double* goal, int*** map, int x, int y, int z);
+		RRT_connect(const std::vector<double> &s, const std::vector<double> &g, const std::vector<std::vector<std::vector<int>>> &map, int x, int y, int z);
 		~RRT_connect();
 
 		double eucDistance(double* A, double* B);
