@@ -16,6 +16,7 @@
 
 typedef Eigen::Matrix<float, 5, 1> Vector5f;
 typedef Eigen::Matrix<float, 3, 1> Vector3f;
+typedef Eigen::Matrix<float, 6, 1> Vector6f;
 
 
 class quadrotor
@@ -28,7 +29,7 @@ public:
     const double Izz = 1.0;
     double m = 0.2;
     int T = 5;
-
+    
     // Proportional coefficients
     int Kp_x = 1;
     int Kp_y = 1;
@@ -36,12 +37,12 @@ public:
     int Kp_roll = 25;
     int Kp_pitch = 25;
     int Kp_yaw = 25;
-
+    
     // Derivative coefficients
     int Kd_x = 10;
     int Kd_y = 10;
     int Kd_z = 1;
-
+    
     double thrust = 0.0;
     double roll_torque = 0.0;
     double pitch_torque = 0.0;
@@ -61,7 +62,7 @@ public:
     {
         std::cout << "Quadrotor object constructed!" << std::endl;
     }
-
+    
     // Specialized constructor
     quadrotor(double m_, int T_, double x_, double y_, double z_, double roll_, double pitch_, double yaw_)
     {
@@ -75,16 +76,16 @@ public:
         pitch = pitch_;
         yaw = yaw_;
     }
-
+    
     // updates the current quadcopter pose given the position and orientation
     void update_pose(quadrotor &q, double x, double y, double z, double roll, double pitch, double yaw);
 
     // Returns the 3d transformation matrix given quadrotor position and orientation
     Eigen::Matrix3d transformation_matrix(quadrotor q);
-
+    
     // Calculates the ZYX rotation given roll, pitch, and yaw in radians
     Eigen::Matrix3d rotation_matrix(double roll, double pitch, double yaw);
-
+    
     // Given set of coefficients, this function calculates the required thrust and torque to track the desired trajectory
     void quadsim(Eigen::Vector3d x_c, Eigen::Vector3d y_c, Eigen::Vector3d z_c);
 
@@ -101,10 +102,17 @@ public:
 class trajectory
 {
 public:
-    Vector3f start_pose;
-    Vector3f end_pose;
-
-    Vector3f traj_solve();
+    // Each vector contains x,y,z components
+    Vector3f start_pose = Vector3f::Zero();
+    Vector3f des_pose = Vector3f::Zero();
+    Vector3f start_vel = Vector3f::Zero();
+    Vector3f des_vel = Vector3f::Zero();
+    Vector3f start_accel = Vector3f::Zero();
+    Vector3f des_accel = Vector3f::Zero();
+    
+    // Given matrix of coefficients A solve for x, y, and z coefficients given b_x, b_y, b_z
+    Vector6f traj_solve(quadrotor &q);
 };
 
 #endif /* quadrotor_hpp */
+

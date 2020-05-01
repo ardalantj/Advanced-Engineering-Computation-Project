@@ -13,7 +13,8 @@
 
 typedef Eigen::Matrix<float, 5, 1> Vector5f;
 typedef Eigen::Matrix<float, 6, 6> Matrix6f;
-
+typedef Eigen::Matrix<float, 6, 1> Vector6f;
+typedef Eigen::Matrix<float, 6, 3> Matrix63;
 
 // updates the current quadcopter pose given the position and orientation
 void quadrotor::update_pose(quadrotor &q, double x, double y,double z, double roll,double pitch,double yaw)
@@ -30,12 +31,12 @@ void quadrotor::update_pose(quadrotor &q, double x, double y,double z, double ro
 Eigen::Matrix3d rotation_matrix(double roll, double pitch, double yaw)
 {
     Eigen::Matrix3d rotation_mat;
-
+    
     rotation_mat << cos(yaw) * cos(pitch), -sin(yaw) * cos(roll) + cos(yaw) * sin(pitch) * sin(roll), sin(yaw) * sin(roll) + cos(yaw) * sin(pitch) * cos(roll),
     sin(yaw) * cos(pitch), cos(yaw) * cos(roll) + sin(yaw) * sin(pitch) *
      sin(roll), -cos(yaw) * sin(roll) + sin(yaw) * sin(pitch) * cos(roll),
      -sin(pitch), cos(pitch) * sin(roll), cos(pitch) * cos(yaw);
-
+    
     return rotation_mat;
 }
 
@@ -48,13 +49,13 @@ Eigen::Matrix3d quadrotor::transformation_matrix(quadrotor quad)
     roll = quad.roll;
     pitch = quad.pitch;
     yaw = quad.yaw;
-
+    
     Eigen::Matrix3d transformation_mat;
-
+    
     transformation_mat << cos(yaw) * cos(pitch), -sin(yaw) * cos(roll) + cos(yaw) * sin(pitch) * sin(roll),sin(yaw) * sin(roll) + cos(yaw) * sin(pitch) * cos(roll), x,
     sin(yaw) * cos(pitch), cos(yaw) * cos(roll) + sin(yaw) * sin(pitch) * sin(roll), -cos(yaw) * sin(roll) + sin(yaw) * sin(pitch) * cos(roll), y,
     -sin(pitch), cos(pitch) * sin(roll), cos(pitch) * cos(yaw), z;
-
+    
     return transformation_mat;
 }
 
@@ -84,11 +85,11 @@ void quadrotor::quadsim(Eigen::Vector3d x_c, Eigen::Vector3d y_c, Eigen::Vector3
 
     auto qobj = quadrotor(5, 5, x = x_pos, y = y_pos, z = z_pos, roll = roll,
                   pitch = pitch, yaw = yaw);
-
+    
     auto i = 0;
     auto n_run = 8;
     auto irun = 0;
-
+    
     while (true) {
         while(t < T)
         {
@@ -99,7 +100,7 @@ void quadrotor::quadsim(Eigen::Vector3d x_c, Eigen::Vector3d y_c, Eigen::Vector3
 //            auto des_x_acc = calc_accel(x_c[i], t);
 //            auto des_y_acc = calc_accel(y_c[i], t);
 //            auto des_z_acc = calc_accel(z_c[i], t);
-
+            
 //            auto thrust = m * (g + des_z_acc + Kp_z * (des_z_pos -z_pos) + Kd_z * (des_z_vel - z_vel));
 //
 //            roll_torque = Kp_roll * \
@@ -139,20 +140,55 @@ double quadrotor::calc_accel(Vector5f c, double t)
     return 20 * c[0] * pow(t,3) + 12 * c[1] * pow(t,2) + 6 * c[2] * t + 2 * c[3];
 }
 
-Vector3f trajectory::traj_solve()
+Vector6f trajectory::traj_solve(quadrotor &q)
 {
-    Vector3f x_c;
-    Vector3f y_c;
-    Vector3f z_c;
-
+    int T = 5;
+    
+    Vector6f x_c;
+    Vector6f y_c;
+    Vector6f z_c;
+    Vector6f b_x;
+    Vector6f b_y;
+    Vector6f b_z;
+    
     Matrix6f A;
-
+    
+    // Matrix of coefficients (6x3, x,y,z)
+    Matrix63 coeff;
+    
     A << 0, 0, 0, 0, 0, 1,
     pow(T,5), pow(T,4), pow(T,3), pow(T,2), pow(T,1), 1,
     0, 0, 0, 0, 1, 0,
     5 * pow(T,4), 4 * pow(T,3), 3 * pow(T,2), 2*T, 1, 0,
     0, 0, 0, 2, 0, 0,
     20 * pow(T,3), 12 * pow(T,2), 6*T, 2, 0, 0;
-
-    return x_c, y_c, z_c;
+    
+    b_x << start_pose(0,0),
+    des_pose(0,0),
+    start_vel(0,0),
+    des_vel(0,0),
+    start_accel(0,0),
+    des_accel(0,0);
+    
+   b_y << start_pose(1,0),
+   des_pose(1,0),
+   start_vel(1,0),
+   des_vel(1,0),
+   start_accel(1,0),
+   des_accel(1,0);
+    
+    b_z << start_pose(2,0),
+    des_pose(2,0),
+    start_vel(2,0),
+    des_vel(2,0),
+    start_accel(2,0),
+    des_accel(2,0);
+    
+    x_c = A.colPivHouseholderQr().solve(b_x);
+    y_c = A.colPivHouseholderQr().solve(b_y);
+    z_c = A.colPivHouseholderQr().solve(b_z);
+    
+    coeff << x_c, y_c, z_c;
+    return coeff;
 }
+
