@@ -1,6 +1,10 @@
 #include <stdlib.h>
 #include <math.h>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include <GL/glut.h>
+#endif
 #include <iostream>
 //#include <time.h>
 
@@ -281,7 +285,7 @@ void mouseButton(int button, int state, int x, int y) {
 // Camera movements
 void computePosFB(float deltaMove) {
 
-	if (x < scene.GetBackBoxLength() -1 && x > 1 && z < scene.GetBackBoxWidth() - 1 && z > 1)
+	if (x < scene.GetBackBoxLength() - 1 && x > 1 && z < scene.GetBackBoxWidth() - 1 && z > 1)
 	{
 		x += deltaMove * lx * 0.3f;
 		z += deltaMove * lz * 0.3f;
@@ -434,11 +438,11 @@ void renderScene()
 	int timeSleep = 1000. / FPS - (glutGet(GLUT_ELAPSED_TIME) - passedTime);
 	if (timeSleep > 1)
 	{
-		#ifdef _WIN32
+#ifdef _WIN32
 		Sleep(timeSleep - 1);
-		#else
-		sleep(timeSleep/100. - 1);
-		#endif
+#else
+		sleep(timeSleep / 100. - 1);
+#endif
 	}
 }
 
@@ -454,7 +458,7 @@ int main(int argc, char** argv) {
 	// Loading the scenes
 	//scene2.Scene2Load();
 	//scene1.Scene1Load();
-	
+
 	// Initialize glut
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -508,21 +512,21 @@ int main(int argc, char** argv) {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, qaDiffuseLight);
 	//glLightfv(GL_LIGHT0, GL_SPECULAR, qaSpecularLight);
 
-	theCamera.setCameraXYZ(int(length/2), int(height*2), int(width/2));
+	theCamera.setCameraXYZ(int(length / 2), int(height * 2), int(width / 2));
 	theCamera.setCameraaXaYaZ(0, -1, 0);
 
 	gluLookAt(theCamera.getCameraX(), theCamera.getCameraY(), theCamera.getCameraZ(),
 		theCamera.getCameraaX() + theCamera.getCameraX(), theCamera.getCameraaY() + theCamera.getCameraY(), theCamera.getCameraaZ() + theCamera.getCameraZ(),
 		0.0f, 1.0f, 0.0f);
 
-	GLfloat qaLightPosition[] = {100.,100.,100.,1.0};
+	GLfloat qaLightPosition[] = { 100.,100.,100.,1.0 };
 	GLfloat qaLightDirection[] = { 0.,1.,0 };
 	glLightfv(GL_LIGHT0, GL_POSITION, qaLightPosition);
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, qaLightDirection);
 
-
 	theCamera.setCameraXYZ(x, y, z);
 	theCamera.setCameraaXaYaZ(lx, ly, lz);
+
 
 	// enter GLUT event processing cycle
 	glutMainLoop();

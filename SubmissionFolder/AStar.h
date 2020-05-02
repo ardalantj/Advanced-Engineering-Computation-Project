@@ -69,9 +69,9 @@
 
 using namespace std;
 
-#define ROW 200 
+#define ROW 100 
 #define COL 100
-#define HEI 200 
+#define HEI 100
 
 class Node {
 
@@ -98,6 +98,12 @@ public:
 
 	}
 
+	~Node()
+	{
+		// cout<<"\n Destructor called";
+	   // delete parent;
+	}
+
 	bool operator==(const Node& t) const
 	{
 		if (this->gridX == t.gridX && this->gridY == t.gridY && this->gridZ == t.gridZ) {
@@ -112,6 +118,7 @@ public:
 			return true;
 		}
 	}
+
 };
 
 vector<vector<int>> RetracePath(Node* startNode, Node* endNode);

@@ -239,9 +239,10 @@ vector<vector<int>> RetracePath(Node* startNode, Node* endNode) {
 	}
 
 	reverse(path.begin(), path.end());
-
-	// for (int i = 0; i < path.size(); i++) 
-	// 	printf("\n -> (%d,%d,%d) ", path[i][0], path[i][1], path[i][2]); 
+	delete(startNode);
+	// delete()
+	for (int i = 0; i < path.size(); i++)
+		printf("\n -> (%d,%d,%d) ", path[i][0], path[i][1], path[i][2]);
 
 	return path;
 }
@@ -311,6 +312,7 @@ vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> st
 	int closedSetMap[ROW][COL][HEI];
 	memset(closedSetMap, 0, sizeof(closedSetMap));
 
+
 	Node* startNode = new Node(startVec[0], startVec[1], startVec[2]);
 
 	Node* endNode = new Node(endVec[0], endVec[1], endVec[2]);
@@ -333,7 +335,16 @@ vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> st
 
 		if (node->gridX == endNode->gridX && node->gridY == endNode->gridY && node->gridZ == endNode->gridZ) {
 
-			return RetracePath(startNode, node);;
+			vector<vector<int>> result = RetracePath(startNode, node);
+			delete(startNode);
+			delete(endNode);
+
+			// if(startNode)	cout<<"\nstill not deleted:"<< startNode->gridX;
+
+			return result;
+			// delete(startNode);
+			// delete
+
 		}
 
 		int i = node->gridX;
@@ -356,8 +367,9 @@ vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> st
 
 				Node* neighbor = new Node(vi, vj, vk);
 
-				if (grid[vi][vj][vk] == 0 or closedSetMap[neighbor->gridX][neighbor->gridY][neighbor->gridZ] == 1) {
+				if (grid[vi][vj][vk] == 1 or closedSetMap[neighbor->gridX][neighbor->gridY][neighbor->gridZ] == 1) {
 
+					delete(neighbor);
 					continue;
 				}
 
@@ -372,6 +384,11 @@ vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> st
 
 						openSetMap[vi][vj][vk] = 1;
 						openSet.push(neighbor);
+
+					}
+
+					else {
+						delete(neighbor);
 					}
 
 				}

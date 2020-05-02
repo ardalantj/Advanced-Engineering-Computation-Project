@@ -2,7 +2,11 @@
 
 #include <stdlib.h>
 #include <math.h>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include <GL/glut.h>
+#endif
 #include <iostream>
 #include <time.h>
 
@@ -14,7 +18,6 @@
 
 #include "RRT_connect.h"
 #include "AStar.h"
-
 
 using namespace std;
 
@@ -32,6 +35,9 @@ private:
 	int backBoxAlpha = 255;
 	int backBoxColor3ub[3] = { 200, 200, 200 };
 	
+	vector<double> userDesStart = { 0,0,0 };
+	vector<double> userDesEnd = { 0,0,0 };
+
 	pathType currPath = none;
 	pathType desPath = none;
 
@@ -44,6 +50,12 @@ private:
 	long countTime = 0;
 
 public:
+
+	void SetUserDesStart(vector<double> oneStart) { userDesStart = oneStart; }
+	vector<double> GetUserDesStart() { return userDesStart; }
+
+	void SetUserDesEnd(vector<double> oneEnd) { userDesEnd = oneEnd; }
+	vector<double> GetUserDesEnd() { return userDesEnd; }
 
 	void SetCurrPathType(pathType onePathType) { currPath = onePathType; }
 	pathType GetCurrPathType() { return currPath; }

@@ -7,7 +7,7 @@ Scene::Scene(float oneLength, float oneWidth, float oneHeight)
 	backBoxWidth = oneWidth;
 	backBoxHeight = oneHeight;
 
-	Volume tempVolume(backBoxLength,backBoxWidth,backBoxHeight);
+	Volume tempVolume(backBoxLength, backBoxWidth, backBoxHeight);
 
 	volume = tempVolume;
 
@@ -146,7 +146,7 @@ void Scene::RunScene(Camera theCamera)
 	}
 
 	//enum pathType { none, rrt, astar };
-	
+
 	glLightfv(GL_LIGHT0, GL_AMBIENT, qaAllAmbientLight);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, qaNoDiffuseLight);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, qaNoSpecularLight);
@@ -185,49 +185,52 @@ void Scene::RunScene(Camera theCamera)
 		break;
 	}
 
-		case astar:
+	case astar:
+	{
+		if (desPath != currPath)
 		{
-			//if (desPath != currPath)
-			//{
-			//	const vector<double> startPoint = { 50.,30.,30. };
-			//	const vector<double> endPoint = { 99.,70.,30. };
 
-			//	vector<int> startPointInt;
-			//	for (double i : startPoint)
-			//	{
-			//		startPointInt.push_back(int(i));
-			//	}
+			currPath = desPath;
 
-			//	vector<int> endPointInt;
-			//	for (double i : endPoint)
-			//	{
-			//		endPointInt.push_back(int(i));
-			//	}
+			const vector<double> startPoint = { 50.,30.,30. };
+			const vector<double> endPoint = { 9999999.,70.,30. };
 
+			vector<int> startPointInt;
+			for (double i : startPoint)
+			{
+				startPointInt.push_back(int(i));
+			}
 
-			//	vector<vector<int>> planInt = aStarSearch(volume.GetVolumeStates(), startPointInt, endPointInt);
+			vector<int> endPointInt;
+			for (double i : endPoint)
+			{
+				endPointInt.push_back(int(i));
+			}
 
 
-			//	vector<vector<double>> planFloat;
-			//	for (vector<int> onePoint : planInt)
-			//	{
-			//		vector<double> tempVector;
-			//		for (int onePartPoint : onePoint)
-			//		{
-			//			tempVector.push_back(double(onePartPoint));
-			//		}
-			//		planFloat.push_back(tempVector);
-			//	}
+			vector<vector<int>> planInt = aStarSearch(volume.GetVolumeStates(), startPointInt, endPointInt);
 
-			//	volume.SetPathVect(planFloat);
 
-			//}
+			vector<vector<double>> planFloat;
+			for (vector<int> onePoint : planInt)
+			{
+				vector<double> tempVector;
+				for (int onePartPoint : onePoint)
+				{
+					tempVector.push_back(double(onePartPoint));
+				}
+				planFloat.push_back(tempVector);
+			}
 
-			//volume.OffsetPath();
+			volume.SetPathVect(planFloat);
 
-			break;
 		}
-		
+
+		volume.OffsetPath();
+
+		break;
+	}
+
 
 	}
 	glLightfv(GL_LIGHT0, GL_AMBIENT, qaAmbientLight);
@@ -359,7 +362,7 @@ void Scene::RunScene(Camera theCamera)
 	//}
 
 
-	
+
 }
 
 void Scene::DrawBackground()
@@ -445,7 +448,7 @@ void Scene::DrawBackground()
 
 
 
-	
+
 	//glMaterialfv(GL_FRONT, GL_AMBIENT, rgbaChecker);
 	//glMaterialfv(GL_FRONT, GL_DIFFUSE, rgbaChecker);
 	////glMaterialfv(GL_FRONT, GL_SPECULAR, fwhite);
