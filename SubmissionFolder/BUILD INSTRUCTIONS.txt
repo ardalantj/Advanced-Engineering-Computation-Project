@@ -1,0 +1,30 @@
+WINDOWS
+	NOTE: IT CAN'T BE BUILT WITH JUST THESE FILES, ONLY IN MY VS ENVIRONMENT
+	Adding the glut library should work for build, but it's a major pain	
+	Just build in visual studio if it can be figured out
+	Executable needs to be tied to freeglut.dll if it will be ran on a machine without glut installed
+
+
+
+
+
+
+LINUX (Ubuntu)
+
+	Installing glut/gl/everything and checking if it is okay
+
+		sudo add-apt-repository universe
+		sudo apt update
+		sudo apt install g++
+		sudo apt-get install freeglut3-dev
+		sudo apt-cache search glut
+		dpkg -L freeglut3-dev
+	
+	Building and run
+
+		g++ *.cpp *.h -o AECPROJECT -lGL -lglut -lGLU
+		./AECPROJECT
+
+MACOS
+
+	Probably very similar to LINUX
