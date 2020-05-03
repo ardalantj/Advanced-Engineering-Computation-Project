@@ -46,8 +46,10 @@ Volume::Volume(float oneLength, float oneWidth, float oneHeight)
 	{
 		tempVect.push_back(0.);
 	}
-	bestPath.pathStart = tempVect;
-	bestPath.pathEnd = tempVect;
+	pathAStar.pathStart = tempVect;
+	pathAStar.pathEnd = tempVect;
+	pathRRT.pathStart = tempVect;
+	pathRRT.pathEnd = tempVect;
 
 	vector<vector<vector<volCube> > > tempVol;
 
@@ -87,29 +89,41 @@ Volume::Volume(float oneLength, float oneWidth, float oneHeight)
 
 }
 
-void Volume::OffsetPath()
+void Volume::OffsetPathAStar()
 {
-	for (int i = 0; i < bestPath.xyz.size(); i++)
+	for (int i = 0; i < pathAStar.xyz.size(); i++)
 	{
-		auto oneNotOffsetNode = bestPath.xyz[i];
+		auto oneNotOffsetNode = pathAStar.xyz[i];
 		oneNotOffsetNode[0] = oneNotOffsetNode[0] + .5;
 		oneNotOffsetNode[1] = oneNotOffsetNode[1] + .5;
 		oneNotOffsetNode[2] = oneNotOffsetNode[2] + .5;
-		bestPath.centerXYZ.push_back(oneNotOffsetNode);
+		pathAStar.centerXYZ.push_back(oneNotOffsetNode);
 	}
 }
 
-void Volume::DrawPath()
+void Volume::OffsetPathRRT()
+{
+	for (int i = 0; i < pathRRT.xyz.size(); i++)
+	{
+		auto oneNotOffsetNode = pathRRT.xyz[i];
+		oneNotOffsetNode[0] = oneNotOffsetNode[0] + .5;
+		oneNotOffsetNode[1] = oneNotOffsetNode[1] + .5;
+		oneNotOffsetNode[2] = oneNotOffsetNode[2] + .5;
+		pathRRT.centerXYZ.push_back(oneNotOffsetNode);
+	}
+}
+
+void Volume::DrawPathAStar()
 {
 
 	GLfloat* verticies = NULL;
-	verticies = new GLfloat[bestPath.centerXYZ.size() * 3];
+	verticies = new GLfloat[pathAStar.centerXYZ.size() * 3];
 
-	for (int i = 0; i < bestPath.centerXYZ.size(); i++)
+	for (int i = 0; i < pathAStar.centerXYZ.size(); i++)
 	{
-		verticies[i * 3] = bestPath.centerXYZ[i][0];
-		verticies[i * 3 + 1] = bestPath.centerXYZ[i][1];
-		verticies[i * 3 + 2] = bestPath.centerXYZ[i][2];
+		verticies[i * 3] = pathAStar.centerXYZ[i][0];
+		verticies[i * 3 + 1] = pathAStar.centerXYZ[i][1];
+		verticies[i * 3 + 2] = pathAStar.centerXYZ[i][2];
 		//DrawSphere(oneNode[0], oneNode[1], oneNode[2], .25, 20, 20);
 	}
 
@@ -119,15 +133,15 @@ void Volume::DrawPath()
 	SetMaterial(rgbaMid, shininessMid);
 	glColor4ub(255, 0, 0, 255);
 	glVertexPointer(3, GL_FLOAT, 0, verticies);
-	glDrawArrays(GL_LINE_STRIP, 0, bestPath.centerXYZ.size());
+	glDrawArrays(GL_LINE_STRIP, 0, pathAStar.centerXYZ.size());
 
-	auto startNode = bestPath.centerXYZ[0];
+	auto startNode = pathAStar.centerXYZ[0];
 	float rgbaStart[4] = { 0.,0.,255.,255. };
 	float shininessStart = 60.;
 	SetMaterial(rgbaStart, shininessStart);
 	DrawSphere(startNode[0], startNode[1], startNode[2], .25, 20, 20);
 
-	auto endNode = bestPath.centerXYZ[bestPath.centerXYZ.size()-1];
+	auto endNode = pathAStar.centerXYZ[pathAStar.centerXYZ.size()-1];
 	float rgbaEnd[4] = { 0.,255.,0.,255. };
 	float shininessEnd = 60.;
 	SetMaterial(rgbaEnd, shininessEnd);
@@ -138,5 +152,107 @@ void Volume::DrawPath()
 	//SetMaterial(rgbaMid, shininessMid);
 
 
+
+}
+
+void Volume::DrawPathRRT()
+{
+
+	GLfloat* verticies = NULL;
+	verticies = new GLfloat[pathRRT.centerXYZ.size() * 3];
+
+	for (int i = 0; i < pathRRT.centerXYZ.size(); i++)
+	{
+		verticies[i * 3] = pathRRT.centerXYZ[i][0];
+		verticies[i * 3 + 1] = pathRRT.centerXYZ[i][1];
+		verticies[i * 3 + 2] = pathRRT.centerXYZ[i][2];
+		//DrawSphere(oneNode[0], oneNode[1], oneNode[2], .25, 20, 20);
+	}
+
+	float rgbaMid[4] = { 255.,255.,0.,255. };
+	float shininessMid = 500.;
+	glLineWidth(2);
+	SetMaterial(rgbaMid, shininessMid);
+	glColor4ub(255, 0, 0, 255);
+	glVertexPointer(3, GL_FLOAT, 0, verticies);
+	glDrawArrays(GL_LINE_STRIP, 0, pathRRT.centerXYZ.size());
+
+	auto startNode = pathRRT.centerXYZ[0];
+	float rgbaStart[4] = { 0.,0.,255.,255. };
+	float shininessStart = 60.;
+	SetMaterial(rgbaStart, shininessStart);
+	DrawSphere(startNode[0], startNode[1], startNode[2], .25, 20, 20);
+
+	auto endNode = pathRRT.centerXYZ[pathRRT.centerXYZ.size() - 1];
+	float rgbaEnd[4] = { 0.,255.,0.,255. };
+	float shininessEnd = 60.;
+	SetMaterial(rgbaEnd, shininessEnd);
+	DrawSphere(endNode[0], endNode[1], endNode[2], .25, 20, 20);
+
+	//float rgbaMid[4] = { 255.,0.,0.,255. };
+	//float shininessMid = 60.;
+	//SetMaterial(rgbaMid, shininessMid);
+
+
+
+}
+
+
+
+double Volume::SumPathRRT()
+{
+
+	double sumLength = 0;
+
+	bool firstVal = true;
+	double prevX = 0;
+	double prevY = 0;
+	double prevZ = 0;
+	for (vector<double> onePoint : pathRRT.centerXYZ)
+	{
+
+		if (!firstVal)
+		{
+			sumLength += sqrt((onePoint[0] - prevX) * (onePoint[0] - prevX) + (onePoint[1] - prevY) * (onePoint[1] - prevY) + (onePoint[2] - prevZ) * (onePoint[2] - prevZ));
+		}
+
+		prevX = onePoint[0];
+		prevY = onePoint[1];
+		prevZ = onePoint[2];
+
+		firstVal = false;
+
+	}
+
+	return sumLength;
+
+}
+
+double Volume::SumPathAStar()
+{
+
+	double sumLength = 0;
+
+	bool firstVal = true;
+	double prevX = 0;
+	double prevY = 0;
+	double prevZ = 0;
+	for (vector<double> onePoint : pathAStar.centerXYZ)
+	{
+
+		if (!firstVal)
+		{
+			sumLength += sqrt((onePoint[0] - prevX) * (onePoint[0] - prevX) + (onePoint[1] - prevY) * (onePoint[1] - prevY) + (onePoint[2] - prevZ) * (onePoint[2] - prevZ));
+		}
+
+		prevX = onePoint[0];
+		prevY = onePoint[1];
+		prevZ = onePoint[2];
+
+		firstVal = false;
+
+	}
+
+	return sumLength;
 
 }

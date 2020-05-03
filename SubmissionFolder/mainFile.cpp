@@ -6,7 +6,8 @@
 #include <GL/glut.h>
 #endif
 #include <iostream>
-//#include <time.h>
+#include <time.h>
+#include <stdlib.h>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -23,6 +24,8 @@
 
 
 using namespace std;
+
+
 
 // Camera object used to store its information between scenes
 float scaleMove = 2.0f;
@@ -154,8 +157,8 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 	case 'n':
 	case 'N':
 	{
-		scene.SetDesPathType(none);
-		scene.SetCurrPathType(none);
+		scene.SetDesPathType(clear);
+		//scene.SetCurrPathType(none);
 		break;
 	}
 
@@ -446,6 +449,28 @@ void renderScene()
 	}
 }
 
+
+bool goodInput(vector<double> oneInput)
+{
+	if (!(oneInput[0] > 0. and oneInput[0] < length))
+	{
+		return false;
+	}
+
+	if (!(oneInput[1] > 0. and oneInput[1] < height))
+	{
+		return false;
+	}
+
+	if (!(oneInput[2] > 0. and oneInput[2] < width))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
 // Main loop
 int main(int argc, char** argv) {
 
@@ -455,7 +480,50 @@ int main(int argc, char** argv) {
 	//HWND hWnd = GetConsoleWindow();
 	//ShowWindow(hWnd, SW_HIDE);
 
+	if (argc == 7)
+	{
+		vector<double> userStartPoint;
+		vector<double> userEndPoint;
+
+		double startX = floor(atof(argv[1]));
+		double startY = floor(atof(argv[2]));
+		double startZ = floor(atof(argv[3]));
+
+		userStartPoint.push_back(startX);
+		userStartPoint.push_back(startY);
+		userStartPoint.push_back(startZ);
+
+		if (!goodInput(userStartPoint))
+		{
+			cout << "Error: Invalid Start Point.\nX must be between 0 and 200.\nY must be between 0 and 100.\nZ must be between 0 and 200.";
+			exit(10);
+		}
+
+		double endX = floor(atof(argv[4]));
+		double endY = floor(atof(argv[5]));
+		double endZ = floor(atof(argv[6]));
+
+		userEndPoint.push_back(endX);
+		userEndPoint.push_back(endY);
+		userEndPoint.push_back(endZ);
+
+		if (!goodInput(userEndPoint))
+		{
+			cout << "Error: Invalid End Point.\nX must be between 0 and 200.\nY must be between 0 and 100.\nZ must be between 0 and 200.";
+			exit(10);
+		}
+
+		scene.SetUserDesStart(userStartPoint);
+		scene.SetUserDesEnd(userEndPoint);
+	}
+	else
+	{
+		cout << "Not enough input arguments. Requires 6. StartX StartY StartZ EndX EndY EndZ";
+		exit(10);
+	}
+
 	// Loading the scenes
+	scene.LoadScene();
 	//scene2.Scene2Load();
 	//scene1.Scene1Load();
 
@@ -466,7 +534,7 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(1600, 900);
 
 	// Creating the window
-	glutCreateWindow("Project 1 - Demo");
+	glutCreateWindow("AEC Project");
 
 	// Defining reshape function
 	glutReshapeFunc(changeSize);

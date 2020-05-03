@@ -1,40 +1,91 @@
 #include "Scene_jwoodfor.h"
-#include <queue>
 
 
-Scene::Scene(float oneLength, float oneWidth, float oneHeight)
+bool Scene::CheckIfGoodObstacle(float x, float y, float z, float length, float width, float height)
 {
-	backBoxLength = oneLength;
-	backBoxWidth = oneWidth;
-	backBoxHeight = oneHeight;
 
-	Volume tempVolume(backBoxLength, backBoxWidth, backBoxHeight);
+	float offset = 4.;
 
-	volume = tempVolume;
-
-	//Obstacle oneObstacle1(100., 50., 100., 20., 10., 5., 255, 0, 0);
-	//obstacles[0] = oneObstacle1;
-
-	Obstacle oneObstacle1(50., 50., 50., 5., 5., 5., 255, 0, 0.);
-	obstacles[0] = oneObstacle1;
-
-	Obstacle oneObstacle2(20., 70., 150., 10., 10., 10., 0, 255, 0);
-	obstacles[1] = oneObstacle2;
-
-	Obstacle oneObstacle3(180., 30., 80., 20., 20., 3., 0, 0, 255);
-	obstacles[2] = oneObstacle3;
-
-	Obstacle oneObstacle4(70., 5., 25., 20., 20., 100., 255, 0, 255);
-	obstacles[3] = oneObstacle4;
-
-	for (int i = 0; i < 3; i++)
+	if (userDesStart[0] >= x - offset && userDesStart[0] <= x + length + offset && userDesStart[1] >= y - offset && userDesStart[1] <= y + height + offset && userDesStart[2] >= z - offset && userDesStart[2] <= z + width + offset)
 	{
-		userDesStart.push_back(0.);
-		userDesEnd.push_back(0.);
+		return false;
 	}
+
+	if (userDesEnd[0] >= x - offset && userDesEnd[0] <= x + length + offset && userDesEnd[1] >= y - offset && userDesEnd[1] <= y + height + offset && userDesEnd[2] >= z - offset && userDesEnd[2] <= z + width + offset)
+	{
+		return false;
+	}
+
+	return true;
+
+}
+
+void Scene::LoadScene()
+{
+
+	srand(time(NULL));
 
 	for (int i = 0; i < numObstacles; i++)
 	{
+
+		
+
+		bool goodObstacle = false;
+
+		float oneX = 0.;
+		float oneY = 0.;
+		float oneZ = 0.;
+		float oneL = 1.;
+		float oneW = 1.;
+		float oneH = 1.;
+
+		while (!goodObstacle)
+		{
+			oneX = float(rand() % int(backBoxLength - 30) + 5);
+			oneY = float(rand() % int(backBoxHeight - 30) + 5);
+			oneZ = float(rand() % int(backBoxWidth - 30) + 5);
+
+			oneL = float(rand() % 24 + 5);
+			oneW = float(rand() % 24 + 5);
+			oneH = float(rand() % 24 + 5);
+
+			if (i == 13)
+			{
+				int fooasdfa = 1;
+			}
+
+			goodObstacle = CheckIfGoodObstacle(oneX, oneY, oneZ, oneL, oneW, oneH);
+
+		}
+
+		int oneR = rand() % 255;
+		int oneG = rand() % 255;
+		int oneB = rand() % 255;
+
+		if (i == 13)
+		{
+			int fooasdfa = 1;
+		}
+
+		Obstacle oneObstacle(oneX, oneY, oneZ, oneL, oneW, oneH, oneR, oneG, oneB);
+		obstacles[i] = oneObstacle;
+	}
+
+	//Obstacle oneObstacle1(108., 62., 27., 15., 23., 22., 255, 0, 0.);
+	//obstacles[0] = oneObstacle1;
+
+	//Obstacle oneObstacle2(20., 70., 150., 10., 10., 10., 0, 255, 0);
+	//obstacles[1] = oneObstacle2;
+
+	//Obstacle oneObstacle3(180., 30., 80., 20., 20., 3., 0, 0, 255);
+	//obstacles[2] = oneObstacle3;
+
+	//Obstacle oneObstacle4(70., 5., 5., 10., 40., 100., 255, 0, 255);
+	//obstacles[3] = oneObstacle4;
+
+	for (int i = 0; i < numObstacles; i++)
+	{
+
 		float length = obstacles[i].GetObstacleLength();
 		float width = obstacles[i].GetObstacleWidth();
 		float height = obstacles[i].GetObstacleHeight();
@@ -83,8 +134,6 @@ Scene::Scene(float oneLength, float oneWidth, float oneHeight)
 		//float z = obstacleAnchor[2] - offset;
 
 
-
-
 		for (int j = minX; j < maxX; j++)
 		{
 			for (int k = minY; k < maxY; k++)
@@ -95,6 +144,24 @@ Scene::Scene(float oneLength, float oneWidth, float oneHeight)
 				}
 			}
 		}
+	}
+
+}
+
+Scene::Scene(float oneLength, float oneWidth, float oneHeight)
+{
+	backBoxLength = oneLength;
+	backBoxWidth = oneWidth;
+	backBoxHeight = oneHeight;
+
+	Volume tempVolume(backBoxLength, backBoxWidth, backBoxHeight);
+
+	volume = tempVolume;
+
+	for (int i = 0; i < 3; i++)
+	{
+		userDesStart.push_back(0.);
+		userDesEnd.push_back(0.);
 	}
 
 	//const vector<double> startPoint = { 50.,30.,30. };
@@ -160,30 +227,24 @@ void Scene::RunScene(Camera theCamera)
 	switch (desPath)
 	{
 
-	case none:
-	{
-		volume.ClearPathVect();
-		break;
-	}
+	//case clear:
+	//{
+	//	volume.ClearPathRRTVect();
+	//	volume.ClearPathAStarVect();
+	//	break;
+	//}
 
 	case rrt:
 	{
-		if (desPath != currPath)
+		if (!pathRRTCheck)
 		{
 
-			volume.ClearPathVect();
+			volume.ClearPathRRTVect();
 
-			int startPointArr[3] = { 50.,30.,30. };
-			int endPointArr[3] = { 99.,70.,30. };
+			long startTime = glutGet(GLUT_ELAPSED_TIME);
 
-			vector<double> startPoint;
-			vector<double> endPoint;
-
-			for (int countD = 0; countD < 3; countD++)
-			{
-				startPoint.push_back(startPointArr[countD]);
-				endPoint.push_back(endPointArr[countD]);
-			}
+			vector<double> startPoint = userDesStart;
+			vector<double> endPoint = userDesEnd;
 
 			RRT_connect dronePlanner(startPoint, endPoint, volume.GetVolumeStates(), volume.GetLength(), volume.GetHeight(), volume.GetWidth());
 
@@ -192,38 +253,44 @@ void Scene::RunScene(Camera theCamera)
 
 			if (plan.size() > 0)
 			{
-				volume.SetPathVect(plan);
+				volume.SetPathRRTVect(plan);
 
-				volume.OffsetPath();
+				volume.OffsetPathRRT();
 
-				currPath = desPath;
+				desPath = none;
+
+				pathRRTCheck = true;
+
+				double rrtPathLength = volume.SumPathRRT();
+
+				double totalTime = (glutGet(GLUT_ELAPSED_TIME) - startTime)/1000.;
+
+				cout << "RRT took " << totalTime << " seconds to calculate. Path length of RRT is: " << rrtPathLength << "\n";
 			}
 
 		}
+		else
+		{
+			volume.ClearPathRRTVect();
+			pathRRTCheck = false;
+		}
 
-		volume.DrawPath();
+		//volume.DrawPathRRT();
 
 		break;
 	}
 
 	case astar:
 	{
-		if (desPath != currPath)
+		if (!pathAStarCheck)
 		{
 
-			volume.ClearPathVect();
+			volume.ClearPathAStarVect();
 
-			int startPointArr[3] = { 50.,30.,30. };
-			int endPointArr[3] = { 99.,70.,30. };
+			long startTime = glutGet(GLUT_ELAPSED_TIME);
 
-			vector<double> startPoint;
-			vector<double> endPoint;
-
-			for (int countD = 0; countD < 3; countD++)
-			{
-				startPoint.push_back(startPointArr[countD]);
-				endPoint.push_back(endPointArr[countD]);
-			}
+			vector<double> startPoint = userDesStart;
+			vector<double> endPoint = userDesEnd;
 
 			vector<int> startPointInt;
 			for (double i : startPoint)
@@ -252,22 +319,43 @@ void Scene::RunScene(Camera theCamera)
 
 			if (planDouble.size() > 0)
 			{
-				volume.SetPathVect(planDouble);
+				volume.SetPathAStarVect(planDouble);
 
-				volume.OffsetPath();
+				volume.OffsetPathAStar();
 
-				currPath = desPath;
+				pathAStarCheck = true;
+
+				double aStarPathLength = volume.SumPathAStar();
+
+				double totalTime = (glutGet(GLUT_ELAPSED_TIME) - startTime)/1000.;
+
+				cout << "AStar took " << totalTime << " seconds to calculate. Path length of AStar is: " << aStarPathLength << "\n";
 			}
 
 		}
-
-		volume.DrawPath();
+		else
+		{
+			volume.ClearPathAStarVect();
+			pathAStarCheck = false;
+		}
 
 		break;
 	}
 
 
 	}
+
+	desPath = none;
+
+	if (pathRRTCheck)
+	{
+		volume.DrawPathRRT();
+	}
+	if (pathAStarCheck)
+	{
+		volume.DrawPathAStar();
+	}
+
 	glLightfv(GL_LIGHT0, GL_AMBIENT, qaAmbientLight);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, qaDiffuseLight);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, qaSpecularLight);
@@ -329,11 +417,12 @@ void Scene::RunScene(Camera theCamera)
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, qaLightDirection);
 	glPopMatrix();
 
-	glPushMatrix();
-	glScalef(1., 1., 1.);
-	glTranslatef(qaLightPosition[0], qaLightPosition[1], qaLightPosition[2]);
-	glutSolidCube(1.);
-	glPopMatrix();
+	//// Visualizing Light Position
+	//glPushMatrix();
+	//glScalef(1., 1., 1.);
+	//glTranslatef(qaLightPosition[0], qaLightPosition[1], qaLightPosition[2]);
+	//glutSolidCube(1.);
+	//glPopMatrix();
 
 
 

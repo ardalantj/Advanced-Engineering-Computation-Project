@@ -8,6 +8,7 @@
 #include <GL/glut.h>
 #endif
 #include <iostream>
+#include <iostream>
 #include <time.h>
 
 #include "Camera_jwoodfor.h"
@@ -21,7 +22,7 @@
 
 using namespace std;
 
-enum pathType { none, rrt, astar };
+enum pathType { none, rrt, astar, clear };
 
 class Scene
 {
@@ -31,7 +32,7 @@ private:
 	float backBoxWidth = 200.;
 	float backBoxHeight = 100.;
 	float backBoxLength = 200.;
-	float backBoxAnchor[3] = { 0., 0., 0.};
+	float backBoxAnchor[4] = { 0., 0., 0.};
 	int backBoxAlpha = 255;
 	int backBoxColor3ub[3] = { 200, 200, 200 };
 	
@@ -41,9 +42,12 @@ private:
 	pathType currPath = none;
 	pathType desPath = none;
 
+	bool pathAStarCheck = false;
+	bool pathRRTCheck = false;
+
 	Volume volume;
 
-	static const int numObstacles = 4;
+	static const int numObstacles = 60;
 
 	Obstacle obstacles[numObstacles];
 
@@ -51,10 +55,16 @@ private:
 
 public:
 
-	void SetUserDesStart(vector<double> oneStart) { userDesStart = oneStart; }
+	void SetPathAStarCheck(bool oneBool) { pathAStarCheck = oneBool; }
+	bool GetPathAStarCheck() { return pathAStarCheck; }
+
+	void SetPathRRTCheck(bool oneBool) { pathRRTCheck = oneBool; }
+	bool GetPathRRTCheck() { return pathRRTCheck; }
+
+	void SetUserDesStart(vector<double> oneStart) { userDesStart = oneStart; volume.SetPathVectStart(userDesStart); }
 	vector<double> GetUserDesStart() { return userDesStart; }
 
-	void SetUserDesEnd(vector<double> oneEnd) { userDesEnd = oneEnd; }
+	void SetUserDesEnd(vector<double> oneEnd) { userDesEnd = oneEnd; volume.SetPathVectEnd(userDesEnd);}
 	vector<double> GetUserDesEnd() { return userDesEnd; }
 
 	void SetCurrPathType(pathType onePathType) { currPath = onePathType; }
@@ -88,6 +98,10 @@ public:
 	//vector<vector<int> > aStarSearch(vector<vector<vector<int> > > grid, vector<int> startVec, vector<int> endVec);
 
 	void RunScene(Camera theCamera);
+
+	void LoadScene();
+
+	bool CheckIfGoodObstacle(float x, float y, float z, float length, float width, float height);
 
 };
 

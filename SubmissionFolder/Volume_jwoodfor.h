@@ -44,7 +44,8 @@ private:
 	double PI = 3.141562653;
 
 	vector<vector<vector<volCube> > > vol;
-	path bestPath;
+	path pathAStar;
+	path pathRRT;
 
 
 
@@ -64,13 +65,31 @@ public:
 	void SetOneVol(volCube oneVolCube, int x, int y, int z) { vol[x][y][z] = oneVolCube; }
 	volCube* GetVolCube(int x, int y, int z) { return &vol[x][y][z]; }
 
-	void SetPath(path onePath) { bestPath = onePath; }
-	path* GetPath() { return &bestPath; }
+	void SetPathAStar(path onePath) { pathAStar = onePath; }
+	path* GetPathAStar() { return &pathAStar; }
 
-	void SetPathVect(vector<vector<double> > inXYZ) { bestPath.xyz = inXYZ; bestPath.pathStart = inXYZ.front(); bestPath.pathEnd = inXYZ.back(); }
-	vector<vector<double> > GetPathVect() { return bestPath.xyz; }
+	void SetPathAStarVect(vector<vector<double> > inXYZ) { pathAStar.xyz = inXYZ; pathAStar.xyz.push_back(pathAStar.pathEnd); pathAStar.xyz.insert(pathAStar.xyz.begin(), pathAStar.pathStart); }
+	vector<vector<double> > GetPathpathAStarVect() { return pathAStar.xyz; }
 
-	void ClearPathVect() { bestPath.centerXYZ.clear(); bestPath.xyz.clear(); }
+	void ClearPathAStarVect() { pathAStar.centerXYZ.clear(); pathAStar.xyz.clear(); }
+
+
+	void SetPathRRT(path onePath) { pathRRT = onePath; }
+	path* GetPathRRT() { return &pathRRT; }
+
+	void SetPathRRTVect(vector<vector<double> > inXYZ) { pathRRT.xyz = inXYZ; pathRRT.xyz.push_back(pathRRT.pathEnd); pathRRT.xyz.insert(pathRRT.xyz.begin(), pathRRT.pathStart); }
+	vector<vector<double> > GetPathpathRRTVect() { return pathRRT.xyz; }
+
+	void ClearPathRRTVect() { pathRRT.centerXYZ.clear(); pathRRT.xyz.clear(); }
+
+
+	void SetPathVectStartEnd(vector<double>  inStart, vector<double>  inEnd) { pathAStar.pathStart = inStart; pathAStar.pathEnd = inEnd; pathRRT.pathStart = inStart; pathRRT.pathEnd = inEnd; }
+	void SetPathVectStart(vector<double>  inStart) { pathAStar.pathStart = inStart; pathRRT.pathStart = inStart; }
+	void SetPathVectEnd(vector<double>  inEnd) { pathAStar.pathEnd = inEnd; pathRRT.pathEnd = inEnd; }
+
+
+
+
 
 	vector<vector<vector<volCube> > > GetVolume() { return vol; }
 
@@ -80,9 +99,14 @@ public:
 
 	Volume(float oneLength, float oneWidth, float oneHeight);
 
-	void OffsetPath();
+	void OffsetPathAStar();
+	void OffsetPathRRT();
 
-	void DrawPath();
+	void DrawPathAStar();
+	void DrawPathRRT();
+
+	double SumPathRRT();
+	double SumPathAStar();
 
 };
 
