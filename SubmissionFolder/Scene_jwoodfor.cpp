@@ -173,8 +173,17 @@ void Scene::RunScene(Camera theCamera)
 
 			volume.ClearPathVect();
 
-			const vector<double> startPoint = { 50.,30.,30. };
-			const vector<double> endPoint = { 99.,70.,30. };
+			int startPointArr[3] = { 50.,30.,30. };
+			int endPointArr[3] = { 99.,70.,30. };
+
+			vector<double> startPoint;
+			vector<double> endPoint;
+
+			for (int countD = 0; countD < 3; countD++)
+			{
+				startPoint.push_back(startPointArr[countD]);
+				endPoint.push_back(endPointArr[countD]);
+			}
 
 			RRT_connect dronePlanner(startPoint, endPoint, volume.GetVolumeStates(), volume.GetLength(), volume.GetHeight(), volume.GetWidth());
 
@@ -204,8 +213,17 @@ void Scene::RunScene(Camera theCamera)
 
 			volume.ClearPathVect();
 
-			const vector<double> startPoint = { 50.,30.,30. };
-			const vector<double> endPoint = { 99.,70.,30. };
+			int startPointArr[3] = { 50.,30.,30. };
+			int endPointArr[3] = { 99.,70.,30. };
+
+			vector<double> startPoint;
+			vector<double> endPoint;
+
+			for (int countD = 0; countD < 3; countD++)
+			{
+				startPoint.push_back(startPointArr[countD]);
+				endPoint.push_back(endPointArr[countD]);
+			}
 
 			vector<int> startPointInt;
 			for (double i : startPoint)
