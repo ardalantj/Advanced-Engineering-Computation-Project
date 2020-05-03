@@ -234,7 +234,13 @@ vector<vector<int> > RetracePath(Node* startNode, Node* endNode) {
 
 	while (!(currentnode->gridX == startNode->gridX && currentnode->gridY == startNode->gridY && currentnode->gridZ == startNode->gridZ)) {
 
-		path.push_back({ currentnode->gridX, currentnode->gridY, currentnode->gridZ });
+		vector<int> vectToPush;
+		vectToPush.push_back(currentnode->gridX);
+		vectToPush.push_back(currentnode->gridY);
+		vectToPush.push_back(currentnode->gridZ);
+
+		//path.push_back({ currentnode->gridX, currentnode->gridY, currentnode->gridZ });
+		path.push_back(vectToPush);
 		currentnode = currentnode->parent;
 
 		i = i + 1;
@@ -389,9 +395,23 @@ vector<vector<int> > aStarSearch(vector<vector<vector<int> > > grid, vector<int>
 
 		int vi, vj, vk;
 
-		vector<int> dx{ -1, -1, -1,  0,  0,  1, 1, 1, 0,-1, -1, -1,  0,  0,  1, 1, 1, 0,-1, -1, -1,  0,  0,  1, 1, 1, 0 };
-		vector<int> dy{ -1,  0,  1, -1,  1, -1, 0, 1, 0, -1,  0,  1, -1,  1, -1, 0, 1, 0, -1,  0,  1, -1,  1, -1, 0, 1, 0 };
-		vector<int> dz{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+		int dxArray [27] = { -1, -1, -1,  0,  0,  1, 1, 1, 0,-1, -1, -1,  0,  0,  1, 1, 1, 0,-1, -1, -1,  0,  0,  1, 1, 1, 0 };
+		int dyArray [27] = { -1,  0,  1, -1,  1, -1, 0, 1, 0, -1,  0,  1, -1,  1, -1, 0, 1, 0, -1,  0,  1, -1,  1, -1, 0, 1, 0 };
+		int dzArray [27] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+
+		vector<int> dx;
+		vector<int> dy;
+		vector<int> dz;
+		for (int countD = 0; countD < 27; countD++)
+		{
+			dx.push_back(dxArray[countD]);
+			dy.push_back(dyArray[countD]);
+			dz.push_back(dzArray[countD]);
+		}
+
+		//vector<int> dx{ -1, -1, -1,  0,  0,  1, 1, 1, 0,-1, -1, -1,  0,  0,  1, 1, 1, 0,-1, -1, -1,  0,  0,  1, 1, 1, 0 };
+		//vector<int> dy{ -1,  0,  1, -1,  1, -1, 0, 1, 0, -1,  0,  1, -1,  1, -1, 0, 1, 0, -1,  0,  1, -1,  1, -1, 0, 1, 0 };
+		//vector<int> dz{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 
 		for (int index = 0; index < 27; index++) {
 
