@@ -1,13 +1,13 @@
 #include "Volume_jwoodfor.h"
 
-vector<vector<vector<int>>> Volume::GetVolumeStates()
+vector<vector<vector<int> > > Volume::GetVolumeStates()
 {
 
-	vector<vector<vector<int>>> volStates;
+	vector<vector<vector<int> > > volStates;
 
 	for (int i = 0; i < length; i++)
 	{
-		vector<vector<int>> yzVect;
+		vector<vector<int> > yzVect;
 		for (int j = 0; j < height; j++)
 		{
 
@@ -41,11 +41,19 @@ Volume::Volume(float oneLength, float oneWidth, float oneHeight)
 	width = oneWidth;
 	height = oneHeight;
 
-	vector<vector<vector<volCube>>> tempVol;
+	vector<double> tempVect;
+	for (int i = 0; i < 3; i++)
+	{
+		tempVect.push_back(0.);
+	}
+	bestPath.pathStart = tempVect;
+	bestPath.pathEnd = tempVect;
+
+	vector<vector<vector<volCube> > > tempVol;
 
 	for (int i = 0; i < length; i++)
 	{
-		vector<vector<volCube>> yzVect;
+		vector<vector<volCube> > yzVect;
 		for (int j = 0; j < height; j++)
 		{
 

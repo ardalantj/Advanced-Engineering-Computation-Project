@@ -18,7 +18,7 @@ void RRT_connect::reset() {
 
 }
 
-RRT_connect::RRT_connect(const std::vector<double>& s, const std::vector<double>& g, const std::vector<std::vector<std::vector<int>>>& map, int X, int Y, int Z) :
+RRT_connect::RRT_connect(const std::vector<double>& s, const std::vector<double>& g, const std::vector<std::vector<std::vector<int> > >& map, int X, int Y, int Z) :
 	m_newChild_a(nullptr), m_newChild_b(nullptr), X(X), Y(Y), Z(Z)
 {
 
@@ -251,7 +251,7 @@ void RRT_connect::localPlanner_connect(double* randC, double* near) {
 
 }
 
-bool RRT_connect::isGoal(std::vector<std::vector<double>>& plan, int* length) {
+bool RRT_connect::isGoal(std::vector<std::vector<double> >& plan, int* length) {
 	// check if new point is goal
 	int check = 0;
 	bool goalReached = false;
@@ -321,13 +321,13 @@ double RRT_connect::eucDistance(double* A, double* B) {
 	return placeHolder;
 }
 
-std::vector<std::vector<double>> RRT_connect::search(int sampleSize, double interp, double epsilon, int* length) {
+std::vector<std::vector<double> > RRT_connect::search(int sampleSize, double interp, double epsilon, int* length) {
 	// generate i random samples
 	srand(time(0)); // seed for random
 	m_epsilon = epsilon;
 	m_interp = interp;
 
-	std::vector<std::vector<double>> plan;
+	std::vector<std::vector<double> > plan;
 	// nearest neighbor flips the switch
 	for (int i = 0; i < sampleSize; i++) {
 

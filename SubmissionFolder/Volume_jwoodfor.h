@@ -30,10 +30,10 @@ class Volume
 
 	struct path
 	{
-		vector<vector<double>> xyz;
-		vector<vector<double>> centerXYZ;
-		vector<double> pathStart = { 0,0,0 };
-		vector<double> pathEnd = { 0,0,0 };
+		vector<vector<double> > xyz;
+		vector<vector<double> > centerXYZ;
+		vector<double> pathStart;
+		vector<double> pathEnd;
 	};
 
 private:
@@ -43,7 +43,7 @@ private:
 	float width = 0.;
 	double PI = 3.141562653;
 
-	vector<vector<vector<volCube>>> vol;
+	vector<vector<vector<volCube> > > vol;
 	path bestPath;
 
 
@@ -67,14 +67,14 @@ public:
 	void SetPath(path onePath) { bestPath = onePath; }
 	path* GetPath() { return &bestPath; }
 
-	void SetPathVect(vector<vector<double>> inXYZ) { bestPath.xyz = inXYZ; bestPath.pathStart = inXYZ.front(); bestPath.pathEnd = inXYZ.back(); }
-	vector<vector<double>> GetPathVect() { return bestPath.xyz; }
+	void SetPathVect(vector<vector<double> > inXYZ) { bestPath.xyz = inXYZ; bestPath.pathStart = inXYZ.front(); bestPath.pathEnd = inXYZ.back(); }
+	vector<vector<double> > GetPathVect() { return bestPath.xyz; }
 
 	void ClearPathVect() { bestPath.centerXYZ.clear(); bestPath.xyz.clear(); }
 
-	vector<vector<vector<volCube>>> GetVolume() { return vol; }
+	vector<vector<vector<volCube> > > GetVolume() { return vol; }
 
-	vector<vector<vector<int>>> GetVolumeStates();
+	vector<vector<vector<int> > > GetVolumeStates();
 
 	Volume();
 

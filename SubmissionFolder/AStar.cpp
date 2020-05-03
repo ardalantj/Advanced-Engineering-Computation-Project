@@ -37,9 +37,9 @@
 //}
 //
 //
-//vector<vector<int>> RetracePath(Node* startNode, Node* endNode) {
+//vector<vector<int> > RetracePath(Node* startNode, Node* endNode) {
 //
-//	vector<vector<int>> path;
+//	vector<vector<int> > path;
 //
 //	Node* currentnode = endNode;
 //
@@ -71,7 +71,7 @@
 //		(hei >= 0) && (hei < HEI);
 //}
 //
-//bool isUnBlocked(vector<vector<vector<int>>> grid, int i, int j, int k)
+//bool isUnBlocked(vector<vector<vector<int> > > grid, int i, int j, int k)
 //{
 //	if (grid[i][j][k] == 1)
 //		return (true);
@@ -93,7 +93,7 @@
 //
 //
 //
-//vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> startVec, vector<int> endVec) {
+//vector<vector<int> > aStarSearch(vector<vector<vector<int> > > grid, vector<int> startVec, vector<int> endVec) {
 //
 //	if (isValid(startVec[0], startVec[1], startVec[2]) == false)
 //	{
@@ -204,7 +204,7 @@
 //
 //// int main(){
 //
-//// 	vector<vector<vector<int>>> grid = {{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}, 
+//// 	vector<vector<vector<int> > > grid = {{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}, 
 //// 									{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}, 
 //// 									{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}
 //// 									};
@@ -220,13 +220,15 @@
 
 #include "AStar.h"
 
-vector<vector<int>> RetracePath(Node* startNode, Node* endNode) {
+vector<vector<int> > RetracePath(Node* startNode, Node* endNode) {
 
-	vector<vector<int>> path;
+	vector<vector<int> > path;
 
 	Node* currentnode = endNode;
 
 	currentnode->parent = endNode->parent;
+
+	long totalLength = ROW * COL * HEI;
 
 	int i = 0;
 
@@ -242,7 +244,7 @@ vector<vector<int>> RetracePath(Node* startNode, Node* endNode) {
 	delete(startNode);
 	// delete()
 	for (int i = 0; i < path.size(); i++)
-		printf("\n -> (%d,%d,%d) ", path[i][0], path[i][1], path[i][2]);
+		//printf("\n -> (%d,%d,%d) ", path[i][0], path[i][1], path[i][2]);
 
 	return path;
 }
@@ -255,7 +257,7 @@ static bool isValid(int row, int col, int hei)
 		(hei >= 0) && (hei < HEI);
 }
 
-bool isUnBlocked(vector<vector<vector<int>>> grid, int i, int j, int k)
+bool isUnBlocked(vector<vector<vector<int> > > grid, int i, int j, int k)
 {
 	if (grid[i][j][k] == 1)
 		return (true);
@@ -277,7 +279,8 @@ double GetDistance(Node* nodeA, Node* nodeB)
 
 
 
-vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> startVec, vector<int> endVec) {
+vector<vector<int> > aStarSearch(vector<vector<vector<int> > > grid, vector<int> startVec, vector<int> endVec) {
+
 
 	if (isValid(startVec[0], startVec[1], startVec[2]) == false)
 	{
@@ -291,8 +294,8 @@ vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> st
 		// return; 
 	}
 
-	if (isUnBlocked(grid, startVec[0], startVec[1], startVec[2]) == false ||
-		isUnBlocked(grid, endVec[0], endVec[1], endVec[2]) == false)
+	if (isUnBlocked(grid, startVec[0], startVec[1], startVec[2]) == true ||
+		isUnBlocked(grid, endVec[0], endVec[1], endVec[2]) == true)
 	{
 		printf("Source or the destination is blocked\n");
 		// return; 
@@ -306,11 +309,43 @@ vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> st
 
 	priority_queue <Node*, vector<Node*>, compareFValue> openSet;
 
-	int openSetMap[ROW][COL][HEI];
-	memset(openSetMap, 0, sizeof(openSetMap));
+	//int openSetMap[ROW][COL][HEI];
+	vector<vector<vector<int> > > openSetMap;
+	vector<vector<vector<int> > > closedSetMap;
+	for (int i = 0; i < ROW; i++)
+	{
+		vector<vector<int> > tempTwo;
+		for (int j = 0; j < COL; j++)
+		{
+			vector<int> tempOne;
+			for (int k = 0; k < HEI; k++)
+			{
+				tempOne.push_back(0);
+			}
+			tempTwo.push_back(tempOne);
+		}
+		openSetMap.push_back(tempTwo);
+		closedSetMap.push_back(tempTwo);
+	}
+	//memset(openSetMap, 0, totalLenkgth);
 
-	int closedSetMap[ROW][COL][HEI];
-	memset(closedSetMap, 0, sizeof(closedSetMap));
+	//int closedSetMap[ROW][COL][HEI];
+	//vector<vector<vector<int> > > closedSetMap;
+	//for (int i = 0; i < ROW; i++)
+	//{
+	//	vector<vector<int> > tempTwo;
+	//	for (int j = 0; j < COL; j++)
+	//	{
+	//		vector<int> tempOne;
+	//		for (int k = 0; k < HEI; k++)
+	//		{
+	//			tempOne.push_back(0);
+	//		}
+	//		tempTwo.push_back(tempOne);
+	//	}
+	//	closedSetMap.push_back(tempTwo);
+	//}
+	//memset(closedSetMap, 0, totalLength);
 
 
 	Node* startNode = new Node(startVec[0], startVec[1], startVec[2]);
@@ -319,12 +354,13 @@ vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> st
 
 	startNode->gCost = 0.0;
 	startNode->hCost = 0.0;
-	startNode->parent = NULL;
+	//startNode->parent = NULL;
 
 	openSet.push(startNode);
 	openSetMap[startVec[0]][startVec[1]][startVec[2]] = 1;
 
 	while (!openSet.empty()) {
+
 
 		Node* node = openSet.top();
 
@@ -334,10 +370,10 @@ vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> st
 		closedSetMap[node->gridX][node->gridY][node->gridZ] = 1;
 
 		if (node->gridX == endNode->gridX && node->gridY == endNode->gridY && node->gridZ == endNode->gridZ) {
-
-			vector<vector<int>> result = RetracePath(startNode, node);
-			delete(startNode);
-			delete(endNode);
+			//printf("made it through\n");
+			vector<vector<int> > result = RetracePath(startNode, node);
+			//delete(startNode);
+			//delete(endNode);
 
 			// if(startNode)	cout<<"\nstill not deleted:"<< startNode->gridX;
 
@@ -384,11 +420,11 @@ vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> st
 
 						openSetMap[vi][vj][vk] = 1;
 						openSet.push(neighbor);
-
 					}
 
 					else {
 						delete(neighbor);
+						// delete(neighbor->parent);
 					}
 
 				}
@@ -397,5 +433,4 @@ vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> st
 		}
 
 	}
-
 }

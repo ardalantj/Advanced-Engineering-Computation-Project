@@ -35,8 +35,8 @@ private:
 	int backBoxAlpha = 255;
 	int backBoxColor3ub[3] = { 200, 200, 200 };
 	
-	vector<double> userDesStart = { 0,0,0 };
-	vector<double> userDesEnd = { 0,0,0 };
+	vector<double> userDesStart;
+	vector<double> userDesEnd;
 
 	pathType currPath = none;
 	pathType desPath = none;
@@ -84,6 +84,8 @@ public:
 	void DrawBackground();
 
 	Scene(float oneLength, float oneWidth, float oneHeight);
+
+	//vector<vector<int> > aStarSearch(vector<vector<vector<int> > > grid, vector<int> startVec, vector<int> endVec);
 
 	void RunScene(Camera theCamera);
 

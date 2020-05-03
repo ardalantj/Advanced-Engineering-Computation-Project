@@ -5,7 +5,7 @@
 #include<bits/stdc++.h> 
 #endif
 //#include<bits/stdc++.h> 
-//#include<iostream>
+#include<iostream>
 //#include<vector>
 //
 //
@@ -52,7 +52,7 @@
 //
 //// int main(){
 //
-//// 	vector<vector<vector<int>>> grid = {{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}, 
+//// 	vector<vector<vector<int> > > grid = {{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}, 
 //// 									{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}, 
 //// 									{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}
 //// 									};
@@ -69,9 +69,9 @@
 
 using namespace std;
 
-#define ROW 100 
+#define ROW 200 
 #define COL 100
-#define HEI 100
+#define HEI 200
 
 class Node {
 
@@ -121,11 +121,11 @@ public:
 
 };
 
-vector<vector<int>> RetracePath(Node* startNode, Node* endNode);
+vector<vector<int> > RetracePath(Node* startNode, Node* endNode);
 static bool isValid(int row, int col, int hei);
-bool isUnBlocked(vector<vector<vector<int>>> grid, int i, int j, int k);
+bool isUnBlocked(vector<vector<vector<int> > > grid, int i, int j, int k);
 double GetDistance(Node* nodeA, Node* nodeB);
-vector<vector<int>> aStarSearch(vector<vector<vector<int>>> grid, vector<int> startVec, vector<int> endVec);
+vector<vector<int> > aStarSearch(vector<vector<vector<int> > > grid, vector<int> startVec, vector<int> endVec);
 
 struct compareFValue {
 	bool operator()(Node* p1, Node* p2)
@@ -139,7 +139,7 @@ struct compareFValue {
 
 // int main(){
 
-// 	vector<vector<vector<int>>> grid = {{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}, 
+// 	vector<vector<vector<int> > > grid = {{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}, 
 // 									{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}, 
 // 									{{1,1,1},{1,1,1}, {1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1},{1,1,1}}
 // 									};

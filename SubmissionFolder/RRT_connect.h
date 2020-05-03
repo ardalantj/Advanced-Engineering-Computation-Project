@@ -27,7 +27,7 @@
 
 class RRT_connect {
 public:
-	RRT_connect(const std::vector<double>& s, const std::vector<double>& g, const std::vector<std::vector<std::vector<int>>>& map, int x, int y, int z);
+	RRT_connect(const std::vector<double>& s, const std::vector<double>& g, const std::vector<std::vector<std::vector<int> > >& map, int x, int y, int z);
 	~RRT_connect();
 
 	double eucDistance(double* A, double* B);
@@ -36,14 +36,14 @@ public:
 	int getVertices();
 	double getCost();
 
-	std::vector<std::vector<double>> search(int sampleSize, double interp, double epsilon, int* length);
+	std::vector<std::vector<double> > search(int sampleSize, double interp, double epsilon, int* length);
 
 	void reset();
 
 protected:
 	void localPlanner_connect(double* randC, double* near);
 	void localPlanner_extend(double* randC, double* near);
-	bool isGoal(std::vector<std::vector<double>>& plan, int* length);
+	bool isGoal(std::vector<std::vector<double> >& plan, int* length);
 	double* nearestNeighbor(double* point);
 	bool isValidPosition(double* point);
 

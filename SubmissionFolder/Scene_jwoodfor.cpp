@@ -1,4 +1,5 @@
 #include "Scene_jwoodfor.h"
+#include <queue>
 
 
 Scene::Scene(float oneLength, float oneWidth, float oneHeight)
@@ -25,6 +26,12 @@ Scene::Scene(float oneLength, float oneWidth, float oneHeight)
 
 	Obstacle oneObstacle4(70., 5., 25., 20., 20., 100., 255, 0, 255);
 	obstacles[3] = oneObstacle4;
+
+	for (int i = 0; i < 3; i++)
+	{
+		userDesStart.push_back(0.);
+		userDesEnd.push_back(0.);
+	}
 
 	for (int i = 0; i < numObstacles; i++)
 	{
@@ -96,7 +103,7 @@ Scene::Scene(float oneLength, float oneWidth, float oneHeight)
 	//RRT_connect dronePlanner(startPoint, endPoint, volume.GetVolumeStates(), volume.GetLength(), volume.GetHeight(), volume.GetWidth());
 
 	//int length = 0;
-	//vector<vector<double>> plan = dronePlanner.search(100000, .1, 1, &length);
+	//vector<vector<double> > plan = dronePlanner.search(100000, .1, 1, &length);
 
 	//volume.SetPathVect(plan);
 
@@ -164,7 +171,7 @@ void Scene::RunScene(Camera theCamera)
 		if (desPath != currPath)
 		{
 
-			currPath = desPath;
+			volume.ClearPathVect();
 
 			const vector<double> startPoint = { 50.,30.,30. };
 			const vector<double> endPoint = { 99.,70.,30. };
@@ -172,11 +179,16 @@ void Scene::RunScene(Camera theCamera)
 			RRT_connect dronePlanner(startPoint, endPoint, volume.GetVolumeStates(), volume.GetLength(), volume.GetHeight(), volume.GetWidth());
 
 			int length = 0;
-			vector<vector<double>> plan = dronePlanner.search(100000, .1, 1, &length);
+			vector<vector<double> > plan = dronePlanner.search(100000, .1, 1, &length);
 
-			volume.SetPathVect(plan);
+			if (plan.size() > 0)
+			{
+				volume.SetPathVect(plan);
 
-			volume.OffsetPath();
+				volume.OffsetPath();
+
+				currPath = desPath;
+			}
 
 		}
 
@@ -190,10 +202,10 @@ void Scene::RunScene(Camera theCamera)
 		if (desPath != currPath)
 		{
 
-			currPath = desPath;
+			volume.ClearPathVect();
 
 			const vector<double> startPoint = { 50.,30.,30. };
-			const vector<double> endPoint = { 9999999.,70.,30. };
+			const vector<double> endPoint = { 99.,70.,30. };
 
 			vector<int> startPointInt;
 			for (double i : startPoint)
@@ -207,11 +219,9 @@ void Scene::RunScene(Camera theCamera)
 				endPointInt.push_back(int(i));
 			}
 
+			vector<vector<int> > planInt = aStarSearch(volume.GetVolumeStates(), startPointInt, endPointInt);
 
-			vector<vector<int>> planInt = aStarSearch(volume.GetVolumeStates(), startPointInt, endPointInt);
-
-
-			vector<vector<double>> planFloat;
+			vector<vector<double> > planDouble;
 			for (vector<int> onePoint : planInt)
 			{
 				vector<double> tempVector;
@@ -219,14 +229,21 @@ void Scene::RunScene(Camera theCamera)
 				{
 					tempVector.push_back(double(onePartPoint));
 				}
-				planFloat.push_back(tempVector);
+				planDouble.push_back(tempVector);
 			}
 
-			volume.SetPathVect(planFloat);
+			if (planDouble.size() > 0)
+			{
+				volume.SetPathVect(planDouble);
+
+				volume.OffsetPath();
+
+				currPath = desPath;
+			}
 
 		}
 
-		volume.OffsetPath();
+		volume.DrawPath();
 
 		break;
 	}
@@ -343,7 +360,7 @@ void Scene::RunScene(Camera theCamera)
 
 	//RRT_connect dronePlanner(start, end, arr3D, X, Y, Z);
 	//int length = 0;
-	//std::vector<std::vector<double>> plan = dronePlanner.search(100000, 0.1, 1, &length);
+	//std::vector<std::vector<double> > plan = dronePlanner.search(100000, 0.1, 1, &length);
 
 	//for (int i = 0; i < length; i++)
 	//{
@@ -672,3 +689,287 @@ void Scene::DrawBackground()
 	//}
 
 }
+
+
+
+
+
+//#define ROW 200 
+//#define COL 100
+//#define HEI 200
+//
+//class Node {
+//
+//public:
+//
+//	int gridX;
+//	int gridY;
+//	int gridZ;
+//
+//	double gCost;
+//	double hCost;
+//
+//	Node* parent;
+//
+//	Node(int _gridX, int _gridY, int _gridZ) {
+//		gridX = _gridX;
+//		gridY = _gridY;
+//		gridZ = _gridZ;
+//	}
+//
+//	int fCost() const {
+//
+//		return gCost + hCost;
+//
+//	}
+//
+//	~Node()
+//	{
+//		// cout<<"\n Destructor called";
+//	   // delete parent;
+//	}
+//
+//	bool operator==(const Node& t) const
+//	{
+//		if (this->gridX == t.gridX && this->gridY == t.gridY && this->gridZ == t.gridZ) {
+//			printf("Comes Here\n");
+//			return true;
+//		}
+//	}
+//
+//	bool operator!=(const Node& t) const
+//	{
+//		if (!(this->gridX == t.gridX && this->gridY == t.gridY && this->gridZ == t.gridZ)) {
+//			return true;
+//		}
+//	}
+//
+//};
+//
+//struct compareFValue {
+//	bool operator()(Node* p1, Node* p2)
+//	{
+//		if (p1->fCost() == p2->fCost()) {
+//			return p1->hCost > p2->hCost;
+//		}
+//		return p1->fCost() > p2->fCost(); //> for the lowest element at the top. 
+//	}
+//};
+//
+//vector<vector<int> > RetracePath(Node* startNode, Node* endNode) {
+//
+//	vector<vector<int> > path;
+//
+//	Node* currentnode = endNode;
+//
+//	currentnode->parent = endNode->parent;
+//
+//	long totalLength = ROW * COL * HEI;
+//
+//	int i = 0;
+//
+//	while (!(currentnode->gridX == startNode->gridX && currentnode->gridY == startNode->gridY && currentnode->gridZ == startNode->gridZ)) {
+//
+//		path.push_back({ currentnode->gridX, currentnode->gridY, currentnode->gridZ });
+//		currentnode = currentnode->parent;
+//
+//		i = i + 1;
+//	}
+//
+//	reverse(path.begin(), path.end());
+//	delete(startNode);
+//	// delete()
+//	for (int i = 0; i < path.size(); i++)
+//		printf("\n -> (%d,%d,%d) ", path[i][0], path[i][1], path[i][2]);
+//
+//	return path;
+//}
+//
+//static bool isValid(int row, int col, int hei)
+//{
+//
+//	return (row >= 0) && (row < ROW) &&
+//		(col >= 0) && (col < COL) &&
+//		(hei >= 0) && (hei < HEI);
+//}
+//
+//bool isUnBlocked(vector<vector<vector<int> > > grid, int i, int j, int k)
+//{
+//	if (grid[i][j][k] == 1)
+//		return (true);
+//	else
+//		return (false);
+//}
+//
+//
+//
+//
+//double GetDistance(Node* nodeA, Node* nodeB)
+//{
+//	int dstX = (nodeA->gridX - nodeB->gridX);
+//	int dstY = (nodeA->gridY - nodeB->gridY);
+//	int dstZ = (nodeA->gridZ - nodeB->gridZ);
+//
+//	return (sqrt(dstX * dstX + dstY * dstY + dstZ * dstZ));
+//}
+//
+//
+//
+//vector<vector<int> > Scene::aStarSearch(vector<vector<vector<int> > > grid, vector<int> startVec, vector<int> endVec) {
+//
+//	vector<vector<int> > helloa;
+//
+//
+//
+//	if (isValid(startVec[0], startVec[1], startVec[2]) == false)
+//	{
+//		printf("Source is invalid\n");
+//		// return; 
+//	}
+//
+//	if (isValid(endVec[0], endVec[1], endVec[2]) == false)
+//	{
+//		printf("Destination is invalid\n");
+//		// return; 
+//	}
+//
+//	if (isUnBlocked(grid, startVec[0], startVec[1], startVec[2]) == true ||
+//		isUnBlocked(grid, endVec[0], endVec[1], endVec[2]) == true)
+//	{
+//		printf("Source or the destination is blocked\n");
+//		// return; 
+//	}
+//
+//	if ((startVec[0] == endVec[0] && startVec[1] == endVec[1] && startVec[2] == endVec[2]))
+//	{
+//		printf("We are already at the destination\n");
+//		// return; 
+//	}
+//
+//	priority_queue <Node*, vector<Node*>, compareFValue> openSet;
+//
+//	//int openSetMap[ROW][COL][HEI];
+//	vector<vector<vector<int> > > openSetMap;
+//	vector<vector<vector<int> > > closedSetMap;
+//	for (int i = 0; i < ROW; i++)
+//	{
+//		vector<vector<int> > tempTwo;
+//		for (int j = 0; j < COL; j++)
+//		{
+//			vector<int> tempOne;
+//			for (int k = 0; k < HEI; k++)
+//			{
+//				tempOne.push_back(0);
+//			}
+//			tempTwo.push_back(tempOne);
+//		}
+//		openSetMap.push_back(tempTwo);
+//		closedSetMap.push_back(tempTwo);
+//	}
+//	//memset(openSetMap, 0, totalLenkgth);
+//
+//	//int closedSetMap[ROW][COL][HEI];
+//	//vector<vector<vector<int> > > closedSetMap;
+//	//for (int i = 0; i < ROW; i++)
+//	//{
+//	//	vector<vector<int> > tempTwo;
+//	//	for (int j = 0; j < COL; j++)
+//	//	{
+//	//		vector<int> tempOne;
+//	//		for (int k = 0; k < HEI; k++)
+//	//		{
+//	//			tempOne.push_back(0);
+//	//		}
+//	//		tempTwo.push_back(tempOne);
+//	//	}
+//	//	closedSetMap.push_back(tempTwo);
+//	//}
+//	//memset(closedSetMap, 0, totalLength);
+//
+//
+//	Node* startNode = new Node(startVec[0], startVec[1], startVec[2]);
+//
+//	Node* endNode = new Node(endVec[0], endVec[1], endVec[2]);
+//
+//	startNode->gCost = 0.0;
+//	startNode->hCost = 0.0;
+//	//startNode->parent = NULL;
+//
+//	openSet.push(startNode);
+//	openSetMap[startVec[0]][startVec[1]][startVec[2]] = 1;
+//
+//	while (!openSet.empty()) {
+//
+//		Node* node = openSet.top();
+//
+//		openSetMap[node->gridX][node->gridY][node->gridZ] = 0;
+//		openSet.pop();
+//
+//		closedSetMap[node->gridX][node->gridY][node->gridZ] = 1;
+//
+//		if (node->gridX == endNode->gridX && node->gridY == endNode->gridY && node->gridZ == endNode->gridZ) {
+//
+//			vector<vector<int> > result = RetracePath(startNode, node);
+//			//delete(startNode);
+//			//delete(endNode);
+//
+//			// if(startNode)	cout<<"\nstill not deleted:"<< startNode->gridX;
+//
+//			return result;
+//			// delete(startNode);
+//			// delete
+//
+//		}
+//
+//		int i = node->gridX;
+//		int j = node->gridY;
+//		int k = node->gridZ;
+//
+//		int vi, vj, vk;
+//
+//		vector<int> dx{ -1, -1, -1,  0,  0,  1, 1, 1, 0,-1, -1, -1,  0,  0,  1, 1, 1, 0,-1, -1, -1,  0,  0,  1, 1, 1, 0 };
+//		vector<int> dy{ -1,  0,  1, -1,  1, -1, 0, 1, 0, -1,  0,  1, -1,  1, -1, 0, 1, 0, -1,  0,  1, -1,  1, -1, 0, 1, 0 };
+//		vector<int> dz{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+//
+//		for (int index = 0; index < 27; index++) {
+//
+//			vi = i + dx[index];
+//			vj = j + dy[index];
+//			vk = k + dz[index];
+//
+//			if (isValid(vi, vj, vk) == true) {
+//
+//				Node* neighbor = new Node(vi, vj, vk);
+//
+//				if (grid[vi][vj][vk] == 0 or closedSetMap[neighbor->gridX][neighbor->gridY][neighbor->gridZ] == 1) {
+//
+//					delete(neighbor);
+//					continue;
+//				}
+//
+//				double newCostToneighbor = node->gCost + GetDistance(node, neighbor);
+//
+//				if (newCostToneighbor < neighbor->gCost || openSetMap[vi][vj][vk] == 0) {
+//					neighbor->gCost = newCostToneighbor;
+//					neighbor->hCost = GetDistance(neighbor, endNode);
+//					neighbor->parent = node;
+//
+//					if (openSetMap[vi][vj][vk] == 0) {
+//
+//						openSetMap[vi][vj][vk] = 1;
+//						openSet.push(neighbor);
+//					}
+//
+//					else {
+//						delete(neighbor);
+//						// delete(neighbor->parent);
+//					}
+//
+//				}
+//			}
+//
+//		}
+//
+//	}
+//
+//}
