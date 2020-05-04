@@ -1,0 +1,4 @@
+Takes 6 inputs from command line. 
+First three are x,y,z values for the path starting position. Last three are x,y,z values for ending positoin.
+x and z values can range from 0 to 200
+y values can range from 0 to 100

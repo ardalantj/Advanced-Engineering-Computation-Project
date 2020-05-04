@@ -1,0 +1,23 @@
+﻿  Scene_jwoodfor.cpp
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Drawing_jwoodfor.h(11,29): warning C4305:  'initializing': truncation from 'double' to 'float'
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\AStar.h(97,16): warning C4244:  'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.h(76,53): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.h(77,35): warning C4244:  'return': conversion from 'int' to 'float', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.h(79,76): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.h(79,100): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.h(79,124): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(26,12): warning C4244:  'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(114,14): warning C4244:  'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(116,15): warning C4244:  'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(118,16): warning C4244:  'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(162,43): warning C4305:  'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(164,46): warning C4305:  'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(165,48): warning C4305:  'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(198,132): warning C4244:  'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(198,113): warning C4244:  'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(198,93): warning C4244:  'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(321,13): warning C4244:  'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(322,13): warning C4244:  'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(323,13): warning C4244:  'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\flclm\source\repos\AEC_Project_Visuals\AEC_Project_Visuals\Scene_jwoodfor.cpp(372,14): warning C4244:  'initializing': conversion from 'int' to 'float', possible loss of data
+  AEC_Project_Visuals.vcxproj -> C:\Users\flclm\source\repos\AEC_Project_Visuals\Debug\AEC_Project_Visuals.exe

@@ -513,6 +513,12 @@ int main(int argc, char** argv) {
 			exit(10);
 		}
 
+		if (userStartPoint == userEndPoint)
+		{
+			cout << "Error: Start and End Points can't be the same";
+			exit(10);
+		}
+
 		scene.SetUserDesStart(userStartPoint);
 		scene.SetUserDesEnd(userEndPoint);
 	}

@@ -20,11 +20,6 @@ private:
 	int obstacleAlpha = 255;
 	int obstacleColor3ub[3] = { 255, 0, 0 };
 
-	
-
-
-
-
 public:
 
 	void SetObstacleWidth(float oneWidth) { obstacleWidth = oneWidth; }
