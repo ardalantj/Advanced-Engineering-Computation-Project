@@ -4,9 +4,6 @@ WINDOWS
 	Just build in visual studio if it can be figured out
 	Executable needs to be tied to freeglut.dll if it will be ran on a machine without glut installed
 
-
-
-
 LINUX (Ubuntu)
 
 	Installing glut/gl/everything and checking if it is okay
@@ -24,7 +21,9 @@ LINUX (Ubuntu)
 		./AECPROJECT
 
 MACOS
-	Mac has GLUT already installed. Just install and update g++ with brew or any other 	package manager. Navigate to the project folder and execute the following commands:
+	Mac has GLUT already installed. Just install and update g++ with brew or any other package manager. Navigate to the project folder and execute the following commands:
 
-	g++ *.cpp -o AECPROJECT -framework OpenGL -framework GLUT
-	./AECPROJECT
+	Building and run
+
+		g++ *.cpp -o AECPROJECT -framework OpenGL -framework GLUT
+		./AECPROJECT
