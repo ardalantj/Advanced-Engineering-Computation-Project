@@ -7,8 +7,6 @@ WINDOWS
 
 
 
-
-
 LINUX (Ubuntu)
 
 	Installing glut/gl/everything and checking if it is okay
@@ -26,5 +24,7 @@ LINUX (Ubuntu)
 		./AECPROJECT
 
 MACOS
+	Mac has GLUT already installed. Just install and update g++ with brew or any other 	package manager. Navigate to the project folder and execute the following commands:
 
-	Probably very similar to LINUX
+	g++ *.cpp -o AECPROJECT -framework OpenGL -framework GLUT
+	./AECPROJECT
